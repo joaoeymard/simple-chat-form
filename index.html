@@ -81,15 +81,15 @@
         sendMessageByForm(ev) {
           ev.preventDefault();
           const message = ev.target[0].value;
+          ev.target.reset();
 
-          if (!message || isEndQuestion(this.indexQuestion)) {
-            return;
-          }
+          if (!message) return;
 
           this.sendMessage({
             message, user: 'user'
           })
 
+          if (isEndQuestion(this.indexQuestion)) return;
           const isNotValid = validateAnswer(this.indexQuestion, message);
 
           if (isNotValid) {
@@ -116,8 +116,6 @@
               message: getQuestion(this.indexQuestion), user: 'bot'
             })
           }
-
-          ev.target.reset();
         }
       }
     })
