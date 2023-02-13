@@ -79,9 +79,10 @@
           });
         },
         sendMessageByForm(ev) {
+          ev.preventDefault();
           const message = ev.target[0].value;
 
-          if (!message) {
+          if (!message || isEndQuestion(this.indexQuestion)) {
             return;
           }
 
