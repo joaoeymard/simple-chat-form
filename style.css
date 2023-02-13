@@ -1,0 +1,68 @@
+body,
+    html {
+      height: 100%;
+    }
+
+    .container-fluid {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card {
+      width: 100%;
+    }
+
+    .message-box.clearfix {
+      overflow: hidden;
+    }
+
+    .message-box .message-data {
+      width: 100%;
+      float: left;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+
+    .message-box .message-data-time {
+      display: block;
+      font-size: 12px;
+      color: #9E9E9E;
+      margin-bottom: 3px;
+    }
+
+    .message-box .message-data-name {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 3px;
+      font-weight: bold;
+    }
+
+    .message-box .message {
+      background: #F2F2F2;
+      color: #555;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+      max-width: 70%;
+      float: left;
+      margin-bottom: 20px;
+      clear: both;
+    }
+
+    .message-box.clearfix:before {
+      content: "";
+      display: table;
+    }
+
+    .message-box.clearfix:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .message-box .message.my-message {
+      background: #0084ff;
+      color: #fff;
+    }

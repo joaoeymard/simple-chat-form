@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <div id="chat" class="container-fluid h-100">
+    <div class="row justify-content-center align-items-center h-100">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <div class="message-box clearfix" v-for="message in messages">
+              <div class="message-data">
+                <span class="message-data-name">{{ message.user }}</span>
+                <span class="message-data-time">{{ formatDate(message.created_at) }}</span>
+              </div>
+              <div class="message" :class="{ 'my-message': message.user == 'user' }">
+                {{ message.message }}
+              </div>
+            </div>
+            <form v-on:submit="sendMessageByForm">
+              <div class="input-group mt-5">
+                <input type="text" class="form-control" placeholder="Enter message..." aria-label="Recipient's username"
+                  aria-describedby="button-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Send</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://momentjs.com/downloads/moment.min.js"></script>
+
+  <script src="./script.js"></script>
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          userData: {},
+          messages: [],
+          indexQuestion: 0,
+        }
+      },
+      mounted() {
+        this.sendMessage({ message: 'Olá!', user: 'bot' })
+        this.sendMessage({ message: getQuestion(this.indexQuestion), user: 'bot' })
+      },
+      methods: {
+        formatDate(date) {
+          return moment(date).format('DD/MM/YYYY HH:mm:ss');
+        },
+        sendMessage({ message, user }) {
+          this.messages.push({
+            message,
+            user,
+            created_at: new Date().toJSON()
+          });
+        },
+        sendMessageByForm(ev) {
+          const message = ev.target[0].value;
+
+          if (!message) {
+            return;
+          }
+
+          this.sendMessage({
+            message, user: 'user'
+          })
+
+          const isNotValid = validateAnswer(this.indexQuestion, message);
+
+          if (isNotValid) {
+            this.sendMessage({
+              message: isNotValid, user: 'bot'
+            })
+          } else {
+            saveAnswer(this.indexQuestion, message);
+            this.indexQuestion++;
+
+            if (isEndQuestion(this.indexQuestion)) {
+              this.sendMessage({
+                message: 'Chegou ao fim! Muito obg', user: 'bot'
+              })
+              this.sendMessage({
+                message: 'Isso é o que sabemos de você:', user: 'bot'
+              })
+              this.sendMessage({
+                message: userData, user: 'bot'
+              })
+              return;
+            }
+            this.sendMessage({
+              message: getQuestion(this.indexQuestion), user: 'bot'
+            })
+          }
+
+          ev.target.reset();
+        }
+      }
+    })
+
+    app.mount('#chat');
+  </script>
+</body>
+
+</html>
